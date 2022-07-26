@@ -10,7 +10,6 @@ import (
 	"github.com/labstack/echo/v4"
 	consts "github.com/litonshil/crud_go_echo/pkg/const"
 
-	"github.com/litonshil/crud_go_echo/pkg/database"
 	"github.com/litonshil/crud_go_echo/pkg/models"
 	"github.com/litonshil/crud_go_echo/pkg/repository"
 
@@ -19,7 +18,6 @@ import (
 	"github.com/litonshil/crud_go_echo/pkg/utils"
 )
 
-var db = database.GetDB()
 var validate = validator.New()
 
 type userRepo struct {
@@ -66,7 +64,7 @@ func (ur *userRepo) Registration(c echo.Context) error {
 }
 
 // // Login login user
-func (ur *userRepo)  Login(c echo.Context) error {
+func (ur *userRepo) Login(c echo.Context) error {
 	var user = new(types.User)
 	var model_user = new(models.User)
 	var tokens = new(types.Token)
@@ -113,7 +111,7 @@ func (ur *userRepo) GetAllUsers(c echo.Context) error {
 }
 
 // // GetAUsers fetch an specific user based on id
-func (ur *userRepo)  GetAUsers(c echo.Context) error {
+func (ur *userRepo) GetAUsers(c echo.Context) error {
 
 	auth_token := c.Request().Header.Get("Authorization")
 	split_token := strings.Split(auth_token, "Bearer ")
@@ -131,28 +129,8 @@ func (ur *userRepo)  GetAUsers(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-// // checkEmptyUserField set all empty field with old data when an user is update
-func checkEmptyUserField(user *models.User, old_user *models.User) *models.User {
-	if user.Name == "" {
-		user.Name = old_user.Name
-	}
-	if user.Address == "" {
-		user.Address = old_user.Address
-	}
-	if user.Email == "" {
-		user.Email = old_user.Email
-	}
-	if user.Type == "" {
-		user.Type = old_user.Type
-	}
-	if user.Password == "" {
-		user.Password = old_user.Password
-	}
-	return user
-}
-
 // // UpdateUser update an user
-func  (ur *userRepo)  UpdateUser(c echo.Context) error {
+func (ur *userRepo) UpdateUser(c echo.Context) error {
 
 	auth_token := c.Request().Header.Get("Authorization")
 	split_token := strings.Split(auth_token, "Bearer ")
@@ -171,17 +149,8 @@ func  (ur *userRepo)  UpdateUser(c echo.Context) error {
 	id := c.Param("id")
 
 	user_id, _ := strconv.Atoi(id)
-	old_err := db.Model(old_user).Where("id = ?", id).Find(&old_user).Error
 
-	if old_err != nil {
-		return c.JSON(http.StatusInternalServerError, old_err.Error())
-	}
-
-	user.Id = user_id
-
-	checkedUser := checkEmptyUserField(user, old_user)
-
-	res, err := ur.repo.UpdateUser(user_id, checkedUser)
+	res, err := ur.repo.UpdateUser(user_id, user, old_user)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -189,7 +158,7 @@ func  (ur *userRepo)  UpdateUser(c echo.Context) error {
 }
 
 // // DeleteUser delete an user
-func (ur *userRepo)  DeleteUser(c echo.Context) error {
+func (ur *userRepo) DeleteUser(c echo.Context) error {
 
 	auth_token := c.Request().Header.Get("Authorization")
 	split_token := strings.Split(auth_token, "Bearer ")

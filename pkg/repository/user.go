@@ -11,7 +11,7 @@ type IUsers interface {
 	CreateUser(user *models.User) error
 	GetAllUsers() ([]models.User, error)
 	GetAUsers(id int) ([]models.User, error)
-	UpdateUser(id int, user *models.User) (*models.User, error)
+	UpdateUser(id int, user *models.User,old_user *models.User) (*models.User, error)
 	DeleteUser(id int) error
 	GetUserByEmail(email string) (*models.User, error)
 }
@@ -45,9 +45,38 @@ func (db *dbs) GetAUsers(id int) ([]models.User, error) {
 	return user, err
 }
 
-func (db *dbs) UpdateUser(id int, user *models.User) (*models.User, error) {
+func checkEmptyUserField(user *models.User, old_user *models.User) *models.User {
+	if user.Name == "" {
+		user.Name = old_user.Name
+	}
+	if user.Address == "" {
+		user.Address = old_user.Address
+	}
+	if user.Email == "" {
+		user.Email = old_user.Email
+	}
+	if user.Type == "" {
+		user.Type = old_user.Type
+	}
+	if user.Password == "" {
+		user.Password = old_user.Password
+	}
+	return user
+}
 
-	err := db.DB.Model(&user).Where("id = ?", id).Update(&user).Error
+func (db *dbs) UpdateUser(id int, user *models.User, old_user *models.User) (*models.User, error) {
+
+	old_err := db.DB.Model(old_user).Where("id = ?", id).Find(&old_user).Error
+
+	if old_err != nil {
+		return user,old_err
+	}
+
+	user.Id = id
+
+	checkedUser := checkEmptyUserField(user, old_user)
+
+	err := db.DB.Model(&user).Where("id = ?", id).Update(&checkedUser).Error
 	fmt.Println("user", user)
 	return user, err
 }
