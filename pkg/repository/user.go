@@ -3,47 +3,64 @@ package repository
 import (
 	"fmt"
 
-	"github.com/litonshil/crud_go_echo/pkg/database"
+	"github.com/jinzhu/gorm"
 	"github.com/litonshil/crud_go_echo/pkg/models"
 )
 
-var db = database.GetDB()
+type IUsers interface {
+	CreateUser(user *models.User) error
+	GetAllUsers() ([]models.User, error)
+	GetAUsers(id int) ([]models.User, error)
+	UpdateUser(id int, user *models.User) (*models.User, error)
+	DeleteUser(id int) error
+	GetUserByEmail(email string) (*models.User, error)
+}
 
-func CreateUser(user *models.User) error {
-	err := db.Create(&user).Error
+type dbs struct {
+	DB *gorm.DB
+}
+
+func NewDb(db *gorm.DB) *dbs {
+	return &dbs{
+		DB: db,
+	}
+}
+
+func (db *dbs) CreateUser(user *models.User) error {
+	err := db.DB.Create(&user).Error
 	return err
 }
-func GetAllUsers() ([]models.User, error) {
+
+func (db *dbs) GetAllUsers() ([]models.User, error) {
 	var all_users []models.User
-	err := db.Find(&all_users).Error
+	err := db.DB.Find(&all_users).Error
 	fmt.Println(all_users)
 	return all_users, err
-
 }
 
-func GetAUsers(id int) ([]models.User, error) {
+func (db *dbs) GetAUsers(id int) ([]models.User, error) {
 	var user []models.User
-	err := db.Where("id = ?", id).Find(&user).Error
+	err := db.DB.Where("id = ?", id).Find(&user).Error
 	fmt.Println("user", user)
 	return user, err
 }
 
-func UpdateUser(id int, user *models.User) (*models.User, error) {
+func (db *dbs) UpdateUser(id int, user *models.User) (*models.User, error) {
 
-	err := db.Model(&user).Where("id = ?", id).Update(&user).Error
+	err := db.DB.Model(&user).Where("id = ?", id).Update(&user).Error
 	fmt.Println("user", user)
 	return user, err
 }
 
-func DeleteUser(id int) (error) {
+func (db *dbs) DeleteUser(id int) error {
 	var user []models.User
-	err := db.Where("id = ?", id).Delete(&user).Error
+	err := db.DB.Where("id = ?", id).Delete(&user).Error
 	return err
 }
 
-func GetUserByEmail(email string) (*models.User, error) {
+func (db *dbs) GetUserByEmail(email string) (*models.User, error) {
 	var user models.User
 
-	err := db.Where("email = ?", email).Find(&user).Error
+	err := db.DB.Where("email = ?", email).Find(&user).Error
 	return &user, err
 }

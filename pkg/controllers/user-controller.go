@@ -9,9 +9,11 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	consts "github.com/litonshil/crud_go_echo/pkg/const"
+
 	"github.com/litonshil/crud_go_echo/pkg/database"
 	"github.com/litonshil/crud_go_echo/pkg/models"
 	"github.com/litonshil/crud_go_echo/pkg/repository"
+
 	"github.com/litonshil/crud_go_echo/pkg/token"
 	"github.com/litonshil/crud_go_echo/pkg/types"
 	"github.com/litonshil/crud_go_echo/pkg/utils"
@@ -20,8 +22,18 @@ import (
 var db = database.GetDB()
 var validate = validator.New()
 
+type userRepo struct {
+	repo repository.IUsers
+}
+
+func NewUserController(user repository.IUsers) *userRepo {
+	return &userRepo{
+		repo: user,
+	}
+}
+
 // Registration create a user
-func Registration(c echo.Context) error {
+func (ur *userRepo) Registration(c echo.Context) error {
 	var user = new(models.User)
 
 	if err := c.Bind(user); err != nil {
@@ -41,7 +53,7 @@ func Registration(c echo.Context) error {
 		return c.JSON(http.StatusUnauthorized, consts.UnAuthorized)
 	}
 
-	if err := repository.CreateUser(user); err != nil {
+	if err := ur.repo.CreateUser(user); err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
@@ -53,8 +65,8 @@ func Registration(c echo.Context) error {
 	return c.JSON(http.StatusCreated, "user created successfullys")
 }
 
-// Login login user
-func Login(c echo.Context) error {
+// // Login login user
+func (ur *userRepo)  Login(c echo.Context) error {
 	var user = new(types.User)
 	var model_user = new(models.User)
 	var tokens = new(types.Token)
@@ -68,7 +80,7 @@ func Login(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, validationerr.Error())
 	}
 
-	model_user, err := repository.GetUserByEmail(user.Email)
+	model_user, err := ur.repo.GetUserByEmail(user.Email)
 	if model_user.Email == "" || err != nil {
 		return c.JSON(http.StatusUnauthorized, consts.UnAuthorized)
 	}
@@ -84,7 +96,7 @@ func Login(c echo.Context) error {
 }
 
 // GetAllUsers fetch all user
-func GetAllUsers(c echo.Context) error {
+func (ur *userRepo) GetAllUsers(c echo.Context) error {
 
 	auth_token := c.Request().Header.Get("Authorization")
 	split_token := strings.Split(auth_token, "Bearer ")
@@ -93,15 +105,15 @@ func GetAllUsers(c echo.Context) error {
 		return c.JSON(http.StatusUnauthorized, consts.UnAuthorized)
 	}
 
-	res, err := repository.GetAllUsers()
+	res, err := ur.repo.GetAllUsers()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusOK, res)
 }
 
-// GetAUsers fetch an specific user based on id
-func GetAUsers(c echo.Context) error {
+// // GetAUsers fetch an specific user based on id
+func (ur *userRepo)  GetAUsers(c echo.Context) error {
 
 	auth_token := c.Request().Header.Get("Authorization")
 	split_token := strings.Split(auth_token, "Bearer ")
@@ -112,14 +124,14 @@ func GetAUsers(c echo.Context) error {
 
 	id := c.Param("id")
 	user_id, _ := strconv.Atoi(id)
-	res, err := repository.GetAUsers(user_id)
+	res, err := ur.repo.GetAUsers(user_id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusOK, res)
 }
 
-// checkEmptyUserField set all empty field with old data when an user is update
+// // checkEmptyUserField set all empty field with old data when an user is update
 func checkEmptyUserField(user *models.User, old_user *models.User) *models.User {
 	if user.Name == "" {
 		user.Name = old_user.Name
@@ -139,8 +151,8 @@ func checkEmptyUserField(user *models.User, old_user *models.User) *models.User 
 	return user
 }
 
-// UpdateUser update an user
-func UpdateUser(c echo.Context) error {
+// // UpdateUser update an user
+func  (ur *userRepo)  UpdateUser(c echo.Context) error {
 
 	auth_token := c.Request().Header.Get("Authorization")
 	split_token := strings.Split(auth_token, "Bearer ")
@@ -169,15 +181,15 @@ func UpdateUser(c echo.Context) error {
 
 	checkedUser := checkEmptyUserField(user, old_user)
 
-	res, err := repository.UpdateUser(user_id, checkedUser)
+	res, err := ur.repo.UpdateUser(user_id, checkedUser)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusOK, res)
 }
 
-// DeleteUser delete an user
-func DeleteUser(c echo.Context) error {
+// // DeleteUser delete an user
+func (ur *userRepo)  DeleteUser(c echo.Context) error {
 
 	auth_token := c.Request().Header.Get("Authorization")
 	split_token := strings.Split(auth_token, "Bearer ")
@@ -188,7 +200,7 @@ func DeleteUser(c echo.Context) error {
 
 	id := c.Param("id")
 	user_id, _ := strconv.Atoi(id)
-	err_delete := repository.DeleteUser(user_id)
+	err_delete := ur.repo.DeleteUser(user_id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err_delete.Error())
 	}
