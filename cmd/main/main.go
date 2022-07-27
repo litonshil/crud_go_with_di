@@ -2,21 +2,13 @@ package main
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/litonshil/crud_go_echo/pkg/routes"
+	container "github.com/litonshil/crud_go_echo/pkg"
 )
-
-// func start(e *echo.Echo) {
-// 	routes.User(e)
-
-// }
 
 func main() {
 
 	e := echo.New()
-
-	// start(e)
-
-	routes.User(e)
+	container.Init(e)
 	e.Start(":8080")
 
 }
