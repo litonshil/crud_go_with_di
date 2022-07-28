@@ -17,6 +17,7 @@ import (
 	"github.com/litonshil/crud_go_echo/pkg/token"
 	"github.com/litonshil/crud_go_echo/pkg/types"
 	"github.com/litonshil/crud_go_echo/pkg/utils"
+	m "github.com/litonshil/crud_go_echo/pkg/middleware"
 )
 
 type userRepo struct {
@@ -27,9 +28,9 @@ func NewUserController(e *echo.Echo, uSvc svc.IUsers) {
 	userc := &userRepo{
 		uSvc: uSvc,
 	}
-	sub := e.Group("/user")
+	sub := e.Group("/user", m.Authenticate)
 	sub.POST("/registration", userc.Registration)
-	sub.POST("/login", userc.Login)
+	e.POST("user/login", userc.Login)
 	sub.GET("/users", userc.GetAllUsers)
 	sub.GET("/:id", userc.GetAUsers)
 	sub.PUT("/:id", userc.UpdateUser)
