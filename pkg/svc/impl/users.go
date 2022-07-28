@@ -40,10 +40,26 @@ func (u *users) GetAllUsers() ([]models.User, error) {
 	return res, nil
 }
 
-func (u *users) GetAUsers(id int) ([]models.User, error) {
+func (u *users) GetAUsers(id int) (models.User, error) {
 	res,err := u.urepo.GetAUsers(id)
 	if err != nil {
 		return res, err
 	}
 	return res, nil
+}
+
+func (u *users) UpdateUser(id int, user *models.User, old_user *models.User) (*models.User, error){
+	res,err := u.urepo.UpdateUser(id,user,old_user)
+	if err != nil {
+		return res, err
+	}
+	return res, nil
+}
+
+func (u *users) DeleteUser(id int) (error){
+	deleteErr := u.urepo.DeleteUser(id)
+	if deleteErr != nil {
+		return deleteErr
+	}
+	return deleteErr
 }
