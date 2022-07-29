@@ -8,14 +8,10 @@ import (
 
 	"github.com/labstack/echo/v4"
 	consts "github.com/litonshil/crud_go_echo/pkg/const"
+	"github.com/litonshil/crud_go_echo/pkg/domain"
 
 	"github.com/litonshil/crud_go_echo/pkg/models"
 	"github.com/litonshil/crud_go_echo/pkg/svc"
-
-	// implSvc "github.com/litonshil/crud_go_echo/pkg/svc/impl"
-	m "github.com/litonshil/crud_go_echo/pkg/middleware"
-	// "github.com/litonshil/crud_go_echo/pkg/token"
-
 	"github.com/litonshil/crud_go_echo/pkg/utils"
 )
 
@@ -23,16 +19,11 @@ type userRepo struct {
 	uSvc svc.IUsers
 }
 
-func NewUserController(e *echo.Echo, uSvc svc.IUsers) {
+func NewUserController(uSvc svc.IUsers) domain.IUsers {
 	userc := &userRepo{
 		uSvc: uSvc,
 	}
-	sub := e.Group("/user", m.Authenticate)
-	sub.POST("/registration", userc.Registration)
-	sub.GET("/users", userc.GetAllUsers)
-	sub.GET("/:id", userc.GetAUsers)
-	sub.PUT("/:id", userc.UpdateUser)
-	sub.DELETE("/:id", userc.DeleteUser)
+	return userc
 }
 
 // Registration create a user
@@ -62,13 +53,6 @@ func (ur *userRepo) Registration(c echo.Context) error {
 // GetAllUsers fetch all user
 func (ur *userRepo) GetAllUsers(c echo.Context) error {
 
-	// auth_token := c.Request().Header.Get("Authorization")
-	// split_token := strings.Split(auth_token, "Bearer ")
-	// _, err := utils.DecodeToken(split_token[1])
-	// if err != nil {
-	// 	return c.JSON(http.StatusUnauthorized, consts.UnAuthorized)
-	// }
-
 	res, err := ur.uSvc.GetAllUsers()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
@@ -78,13 +62,6 @@ func (ur *userRepo) GetAllUsers(c echo.Context) error {
 
 // GetAUsers fetch an specific user based on id
 func (ur *userRepo) GetAUsers(c echo.Context) error {
-
-	// auth_token := c.Request().Header.Get("Authorization")
-	// split_token := strings.Split(auth_token, "Bearer ")
-	// _, err := utils.DecodeToken(split_token[1])
-	// if err != nil {
-	// 	return c.JSON(http.StatusUnauthorized, consts.UnAuthorized)
-	// }
 
 	id := c.Param("id")
 	user_id, _ := strconv.Atoi(id)
@@ -97,13 +74,6 @@ func (ur *userRepo) GetAUsers(c echo.Context) error {
 
 // // UpdateUser update an user
 func (ur *userRepo) UpdateUser(c echo.Context) error {
-
-	// auth_token := c.Request().Header.Get("Authorization")
-	// split_token := strings.Split(auth_token, "Bearer ")
-	// _, err := utils.DecodeToken(split_token[1])
-	// if err != nil {
-	// 	return c.JSON(http.StatusUnauthorized, consts.UnAuthorized)
-	// }
 
 	var user = new(models.User)
 	var old_user = new(models.User)
@@ -125,13 +95,6 @@ func (ur *userRepo) UpdateUser(c echo.Context) error {
 
 // DeleteUser delete an user
 func (ur *userRepo) DeleteUser(c echo.Context) error {
-
-	// auth_token := c.Request().Header.Get("Authorization")
-	// split_token := strings.Split(auth_token, "Bearer ")
-	// _, err := utils.DecodeToken(split_token[1])
-	// if err != nil {
-	// 	return c.JSON(http.StatusUnauthorized, consts.UnAuthorized)
-	// }
 
 	id := c.Param("id")
 	user_id, _ := strconv.Atoi(id)

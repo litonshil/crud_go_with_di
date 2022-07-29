@@ -5,25 +5,25 @@ import (
 
 	"github.com/labstack/echo/v4"
 	consts "github.com/litonshil/crud_go_echo/pkg/const"
+	"github.com/litonshil/crud_go_echo/pkg/domain"
+
 	// "github.com/litonshil/crud_go_echo/pkg/models"
-	"github.com/litonshil/crud_go_echo/pkg/svc"
+	// "github.com/litonshil/crud_go_echo/pkg/svc"
 	svcImpl "github.com/litonshil/crud_go_echo/pkg/svc/impl"
 	"github.com/litonshil/crud_go_echo/pkg/types"
 )
 
 type auth struct {
 	authSvc svcImpl.IAuth
-	uSvc    svc.IUsers
 }
 
 // NewAuthController will initialize the controllers
-func NewAuthController(e *echo.Echo, authSvc svcImpl.IAuth, uSvc svc.IUsers) {
+func NewAuthController(authSvc svcImpl.IAuth) domain.IAuth {
 	ac := &auth{
 		authSvc: authSvc,
-		uSvc:    uSvc,
+		// uSvc:    uSvc,
 	}
-
-	e.POST("/users/login", ac.Login)
+	return ac
 }
 
 func (ur *auth) Login(c echo.Context) error {
