@@ -14,6 +14,10 @@ func Init(e *echo.Echo) {
 
 	userRepo := repoImpl.NewUsersRepository(db)
 	userSvc := svcImpl.NewUsersService(userRepo)
+	authSvc := svcImpl.NewAuthService(userRepo)
+
 	controllers.NewUserController(e,userSvc)
+	controllers.NewAuthController(e, authSvc, userSvc)
+
 
 }

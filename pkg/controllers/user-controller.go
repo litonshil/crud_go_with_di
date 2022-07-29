@@ -1,10 +1,8 @@
 package controllers
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"strconv"
 
@@ -13,11 +11,12 @@ import (
 
 	"github.com/litonshil/crud_go_echo/pkg/models"
 	"github.com/litonshil/crud_go_echo/pkg/svc"
+
 	// implSvc "github.com/litonshil/crud_go_echo/pkg/svc/impl"
-	"github.com/litonshil/crud_go_echo/pkg/token"
-	"github.com/litonshil/crud_go_echo/pkg/types"
-	"github.com/litonshil/crud_go_echo/pkg/utils"
 	m "github.com/litonshil/crud_go_echo/pkg/middleware"
+	// "github.com/litonshil/crud_go_echo/pkg/token"
+
+	"github.com/litonshil/crud_go_echo/pkg/utils"
 )
 
 type userRepo struct {
@@ -30,7 +29,6 @@ func NewUserController(e *echo.Echo, uSvc svc.IUsers) {
 	}
 	sub := e.Group("/user", m.Authenticate)
 	sub.POST("/registration", userc.Registration)
-	e.POST("user/login", userc.Login)
 	sub.GET("/users", userc.GetAllUsers)
 	sub.GET("/:id", userc.GetAUsers)
 	sub.PUT("/:id", userc.UpdateUser)
@@ -61,50 +59,15 @@ func (ur *userRepo) Registration(c echo.Context) error {
 	return c.JSON(http.StatusCreated, "user created successfullys")
 }
 
-func mathcedCredentials(user *types.User, model_user *models.User) error{
-	fmt.Println(user, model_user)
-	if(user.Password == model_user.Password && user.Type == model_user.Type) {
-		return nil
-	}
-	return errors.New("credintials not matched")
-}
-
-// Login login user
-func (ur *userRepo) Login(c echo.Context) error {
-	var user = new(types.User)
-	var model_user = new(models.User)
-	var tokens = new(types.Token)
-
-	if err := c.Bind(user); err != nil {
-		return c.JSON(http.StatusBadRequest, consts.BadRequest)
-	}
-
-	model_user, err := ur.uSvc.GetUserByEmail(user.Email)
-	credErr := mathcedCredentials(user,model_user)
-
-	if model_user.Email == "" || err != nil || credErr !=nil {
-		return c.JSON(http.StatusUnauthorized, consts.UnAuthorized)
-	}
-
-	token, refresh_token, err := token.GenerateUserTokens(model_user.Email, model_user.Id, model_user.Type)
-	tokens.User_Token = token
-	tokens.User_Refreshtoken = refresh_token
-
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
-	}
-	return c.JSON(http.StatusOK, tokens)
-}
-
 // GetAllUsers fetch all user
 func (ur *userRepo) GetAllUsers(c echo.Context) error {
 
-	auth_token := c.Request().Header.Get("Authorization")
-	split_token := strings.Split(auth_token, "Bearer ")
-	_, err := utils.DecodeToken(split_token[1])
-	if err != nil {
-		return c.JSON(http.StatusUnauthorized, consts.UnAuthorized)
-	}
+	// auth_token := c.Request().Header.Get("Authorization")
+	// split_token := strings.Split(auth_token, "Bearer ")
+	// _, err := utils.DecodeToken(split_token[1])
+	// if err != nil {
+	// 	return c.JSON(http.StatusUnauthorized, consts.UnAuthorized)
+	// }
 
 	res, err := ur.uSvc.GetAllUsers()
 	if err != nil {
@@ -116,12 +79,12 @@ func (ur *userRepo) GetAllUsers(c echo.Context) error {
 // GetAUsers fetch an specific user based on id
 func (ur *userRepo) GetAUsers(c echo.Context) error {
 
-	auth_token := c.Request().Header.Get("Authorization")
-	split_token := strings.Split(auth_token, "Bearer ")
-	_, err := utils.DecodeToken(split_token[1])
-	if err != nil {
-		return c.JSON(http.StatusUnauthorized, consts.UnAuthorized)
-	}
+	// auth_token := c.Request().Header.Get("Authorization")
+	// split_token := strings.Split(auth_token, "Bearer ")
+	// _, err := utils.DecodeToken(split_token[1])
+	// if err != nil {
+	// 	return c.JSON(http.StatusUnauthorized, consts.UnAuthorized)
+	// }
 
 	id := c.Param("id")
 	user_id, _ := strconv.Atoi(id)
@@ -135,12 +98,12 @@ func (ur *userRepo) GetAUsers(c echo.Context) error {
 // // UpdateUser update an user
 func (ur *userRepo) UpdateUser(c echo.Context) error {
 
-	auth_token := c.Request().Header.Get("Authorization")
-	split_token := strings.Split(auth_token, "Bearer ")
-	_, err := utils.DecodeToken(split_token[1])
-	if err != nil {
-		return c.JSON(http.StatusUnauthorized, consts.UnAuthorized)
-	}
+	// auth_token := c.Request().Header.Get("Authorization")
+	// split_token := strings.Split(auth_token, "Bearer ")
+	// _, err := utils.DecodeToken(split_token[1])
+	// if err != nil {
+	// 	return c.JSON(http.StatusUnauthorized, consts.UnAuthorized)
+	// }
 
 	var user = new(models.User)
 	var old_user = new(models.User)
@@ -163,12 +126,12 @@ func (ur *userRepo) UpdateUser(c echo.Context) error {
 // DeleteUser delete an user
 func (ur *userRepo) DeleteUser(c echo.Context) error {
 
-	auth_token := c.Request().Header.Get("Authorization")
-	split_token := strings.Split(auth_token, "Bearer ")
-	_, err := utils.DecodeToken(split_token[1])
-	if err != nil {
-		return c.JSON(http.StatusUnauthorized, consts.UnAuthorized)
-	}
+	// auth_token := c.Request().Header.Get("Authorization")
+	// split_token := strings.Split(auth_token, "Bearer ")
+	// _, err := utils.DecodeToken(split_token[1])
+	// if err != nil {
+	// 	return c.JSON(http.StatusUnauthorized, consts.UnAuthorized)
+	// }
 
 	id := c.Param("id")
 	user_id, _ := strconv.Atoi(id)
