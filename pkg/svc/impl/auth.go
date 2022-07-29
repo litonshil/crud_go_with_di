@@ -7,8 +7,8 @@ import (
 
 	"github.com/labstack/echo/v4"
 	consts "github.com/litonshil/crud_go_echo/pkg/const"
+	"github.com/litonshil/crud_go_echo/pkg/domain"
 	"github.com/litonshil/crud_go_echo/pkg/models"
-	"github.com/litonshil/crud_go_echo/pkg/repository"
 	"github.com/litonshil/crud_go_echo/pkg/token"
 	"github.com/litonshil/crud_go_echo/pkg/types"
 )
@@ -18,10 +18,10 @@ type IAuth interface {
 }
 
 type auth struct {
-	userRepo repository.IUsers
+	userRepo domain.IUsersRepo
 }
 
-func NewAuthService(userRepo repository.IUsers) IAuth {
+func NewAuthService(userRepo domain.IUsersRepo) IAuth {
 	return &auth{
 		userRepo: userRepo,
 	}

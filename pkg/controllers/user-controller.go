@@ -11,15 +11,14 @@ import (
 	"github.com/litonshil/crud_go_echo/pkg/domain"
 
 	"github.com/litonshil/crud_go_echo/pkg/models"
-	"github.com/litonshil/crud_go_echo/pkg/svc"
 	"github.com/litonshil/crud_go_echo/pkg/utils"
 )
 
 type userRepo struct {
-	uSvc svc.IUsers
+	uSvc domain.IUsersSvc
 }
 
-func NewUserController(uSvc svc.IUsers) domain.IUsersController {
+func NewUserController(uSvc domain.IUsersSvc) domain.IUsersController {
 	userc := &userRepo{
 		uSvc: uSvc,
 	}

@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/jinzhu/gorm"
+	"github.com/litonshil/crud_go_echo/pkg/domain"
 	"github.com/litonshil/crud_go_echo/pkg/models"
-	"github.com/litonshil/crud_go_echo/pkg/repository"
 )
 
 type dbs struct {
@@ -13,7 +13,7 @@ type dbs struct {
 }
 
 // NewUsersRepository will create an object that represent the User.Repository implementations
-func NewUsersRepository(dbc *gorm.DB) repository.IUsers {
+func NewUsersRepository(dbc *gorm.DB) domain.IUsersRepo {
 	return &dbs{
 		DB: dbc,
 	}
