@@ -6,10 +6,10 @@ import (
 )
 
 type userA struct {
-	urepo domain.IAuth
+	urepo domain.IAuthController
 }
 
-func Auth(e *echo.Echo, u domain.IAuth) {
+func Auth(e *echo.Echo, u domain.IAuthController) {
 
 	cr := &userA{
 		urepo: u,

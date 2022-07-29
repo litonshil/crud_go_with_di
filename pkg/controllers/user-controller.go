@@ -19,7 +19,7 @@ type userRepo struct {
 	uSvc svc.IUsers
 }
 
-func NewUserController(uSvc svc.IUsers) domain.IUsers {
+func NewUserController(uSvc svc.IUsers) domain.IUsersController {
 	userc := &userRepo{
 		uSvc: uSvc,
 	}

@@ -18,7 +18,7 @@ type auth struct {
 }
 
 // NewAuthController will initialize the controllers
-func NewAuthController(authSvc svcImpl.IAuth) domain.IAuth {
+func NewAuthController(authSvc svcImpl.IAuth) domain.IAuthController {
 	ac := &auth{
 		authSvc: authSvc,
 		// uSvc:    uSvc,

@@ -7,10 +7,10 @@ import (
 )
 
 type users struct {
-	urepo domain.IUsers
+	urepo domain.IUsersController
 }
 
-func User(e *echo.Echo, u domain.IUsers) {
+func User(e *echo.Echo, u domain.IUsersController) {
 
 	cr := &users{
 		urepo: u,
