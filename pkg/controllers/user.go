@@ -14,19 +14,19 @@ import (
 	"github.com/litonshil/crud_go_echo/pkg/utils"
 )
 
-type userRepo struct {
+type UserRepo struct {
 	uSvc domain.IUsersSvc
 }
 
-func NewUserController(uSvc domain.IUsersSvc) domain.IUsersController {
-	userc := &userRepo{
+func NewUserController(uSvc domain.IUsersSvc) *UserRepo {
+	userc := &UserRepo{
 		uSvc: uSvc,
 	}
 	return userc
 }
 
 // Registration create a user
-func (ur *userRepo) Registration(c echo.Context) error {
+func (ur *UserRepo) Registration(c echo.Context) error {
 	var user = new(models.User)
 
 	if err := c.Bind(user); err != nil {
@@ -50,7 +50,7 @@ func (ur *userRepo) Registration(c echo.Context) error {
 }
 
 // GetAllUsers fetch all user
-func (ur *userRepo) GetAllUsers(c echo.Context) error {
+func (ur *UserRepo) GetAllUsers(c echo.Context) error {
 
 	res, err := ur.uSvc.GetAllUsers()
 	if err != nil {
@@ -60,7 +60,7 @@ func (ur *userRepo) GetAllUsers(c echo.Context) error {
 }
 
 // GetAUsers fetch an specific user based on id
-func (ur *userRepo) GetAUsers(c echo.Context) error {
+func (ur *UserRepo) GetAUsers(c echo.Context) error {
 
 	id := c.Param("id")
 	user_id, _ := strconv.Atoi(id)
@@ -72,7 +72,7 @@ func (ur *userRepo) GetAUsers(c echo.Context) error {
 }
 
 // // UpdateUser update an user
-func (ur *userRepo) UpdateUser(c echo.Context) error {
+func (ur *UserRepo) UpdateUser(c echo.Context) error {
 
 	var user = new(models.User)
 	var old_user = new(models.User)
@@ -93,7 +93,7 @@ func (ur *userRepo) UpdateUser(c echo.Context) error {
 }
 
 // DeleteUser delete an user
-func (ur *userRepo) DeleteUser(c echo.Context) error {
+func (ur *UserRepo) DeleteUser(c echo.Context) error {
 
 	id := c.Param("id")
 	user_id, _ := strconv.Atoi(id)

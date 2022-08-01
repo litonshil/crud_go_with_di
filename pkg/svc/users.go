@@ -1,4 +1,4 @@
-package impl
+package svc
 
 import (
 	"github.com/litonshil/crud_go_echo/pkg/domain"

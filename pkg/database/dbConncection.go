@@ -23,6 +23,7 @@ func Connect() {
 		panic(err)
 	}
 	db = d
+	Migration()
 }
 
 func Migration() {
@@ -31,10 +32,5 @@ func Migration() {
 }
 
 func GetDB() *gorm.DB {
-	if db == nil {
-		Connect()
-		Migration()
-	}
-
 	return db
 }

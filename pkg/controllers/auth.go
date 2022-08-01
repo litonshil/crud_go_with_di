@@ -9,7 +9,7 @@ import (
 
 	// "github.com/litonshil/crud_go_echo/pkg/models"
 	// "github.com/litonshil/crud_go_echo/pkg/svc"
-	svcImpl "github.com/litonshil/crud_go_echo/pkg/svc/impl"
+	svcImpl "github.com/litonshil/crud_go_echo/pkg/svc"
 	"github.com/litonshil/crud_go_echo/pkg/types"
 )
 

@@ -1,4 +1,4 @@
-package impl
+package svc
 
 import (
 	"errors"
