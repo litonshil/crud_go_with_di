@@ -10,9 +10,11 @@ import (
 func VerifyToken(usertoken string) (bool, error) {
 	claims := &types.SignedUserDetails{}
 	flag := false
+
 	token, err := jwt.ParseWithClaims(usertoken, claims, func(token *jwt.Token) (interface{}, error) {
 		return []byte(config.GetConfig().SecretKey), nil
 	})
+
 	if err == jwt.ErrSignatureInvalid || !token.Valid || err != nil {
 		return flag, err
 	}

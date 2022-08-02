@@ -6,7 +6,6 @@ import (
 )
 
 type IUsersSvc interface {
-	// CreateUser(user *types.UserRegisterReq) error
 	GetUserByEmail(email string) (*models.User, error)
 	GetUsers() ([]models.User, error)
 	GetUser(id int) (models.User, error)
