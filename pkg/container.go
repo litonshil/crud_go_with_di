@@ -16,11 +16,10 @@ func Init(e *echo.Echo) {
 
 	userRepo := repoImpl.NewUsersRepository(db)
 	userSvc := svcImpl.NewUsersService(userRepo)
-	// authSvc := svcImpl.NewAuthService(userRepo)
+	authSvc := svcImpl.NewAuthService(userRepo)
 
 	userCr := controllers.NewUserController(userSvc)
-	// authCr := controllers.NewAuthController(authSvc)
-	routes.User(e, userCr)
-	// routes.Auth(e, authCr)
+	authCr := controllers.NewAuthController(authSvc)
+	routes.InitRoute(e, userCr, authCr)
 
 }

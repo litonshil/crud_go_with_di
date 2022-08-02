@@ -1,6 +1,8 @@
 package svc
 
 import (
+	"fmt"
+
 	"github.com/litonshil/crud_go_echo/pkg/domain"
 	"github.com/litonshil/crud_go_echo/pkg/models"
 )
@@ -31,24 +33,32 @@ func (u *users) GetUserByEmail(email string) (*models.User, error) {
 	return res, nil
 }
 
-func (u *users) GetAllUsers() ([]models.User, error) {
-	res, err := u.urepo.GetAllUsers()
+func (u *users) GetUsers() ([]models.User, error) {
+	res, err := u.urepo.GetUsers()
 	if err != nil {
 		return res, err
 	}
 	return res, nil
 }
 
-func (u *users) GetAUsers(id int) (models.User, error) {
-	res, err := u.urepo.GetAUsers(id)
+func (u *users) GetUser(id int) (models.User, error) {
+	res, err := u.urepo.GetUserById(id)
 	if err != nil {
 		return res, err
 	}
 	return res, nil
 }
 
-func (u *users) UpdateUser(id int, user *models.User, old_user *models.User) (*models.User, error) {
-	res, err := u.urepo.UpdateUser(id, user, old_user)
+func (u *users) UpdateUser(id int, user *models.User) (*models.User, error) {
+
+	existed_user, existUserErr := u.urepo.GetUserById(id)
+	if existUserErr != nil {
+		fmt.Println("update error")
+		return user, existUserErr
+	}
+	fmt.Println(existed_user)
+
+	res, err := u.urepo.UpdateUser(id, user, existed_user)
 	if err != nil {
 		return res, err
 	}
@@ -56,6 +66,12 @@ func (u *users) UpdateUser(id int, user *models.User, old_user *models.User) (*m
 }
 
 func (u *users) DeleteUser(id int) error {
+	_, existUserErr := u.urepo.GetUserById(id)
+	if existUserErr != nil {
+		fmt.Println("passed")
+		return existUserErr
+	}
+
 	deleteErr := u.urepo.DeleteUser(id)
 	if deleteErr != nil {
 		return deleteErr

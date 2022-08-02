@@ -21,18 +21,18 @@ func Authenticate(next echo.HandlerFunc) echo.HandlerFunc {
 
 		reqToken := splitToken[1]
 		if reqToken == "" {
-			return c.String(http.StatusInternalServerError, "failed to getting your token")
+			return c.String(http.StatusUnauthorized, "your provided token is wrong")
 		}
 
 		ok, err := helpers.VerifyToken(reqToken)
-		if err != nil {
+
+		if !ok {
 			return c.String(http.StatusUnauthorized, err.Error())
 		}
 
-		if !ok {
+		if err != nil {
 			return c.String(http.StatusInternalServerError, err.Error())
 		}
-
 		return next(c)
 	}
 }

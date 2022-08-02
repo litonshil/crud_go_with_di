@@ -13,16 +13,7 @@ func VerifyToken(usertoken string) (bool, error) {
 	token, err := jwt.ParseWithClaims(usertoken, claims, func(token *jwt.Token) (interface{}, error) {
 		return []byte(config.GetConfig().SecretKey), nil
 	})
-	if err != nil {
-		if err == jwt.ErrSignatureInvalid {
-
-			return flag, err
-		}
-
-		return flag, err
-	}
-	if !token.Valid {
-
+	if err == jwt.ErrSignatureInvalid || !token.Valid || err != nil {
 		return flag, err
 	}
 	flag = true

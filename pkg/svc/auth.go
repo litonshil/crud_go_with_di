@@ -13,21 +13,17 @@ import (
 	"github.com/litonshil/crud_go_echo/pkg/types"
 )
 
-type IAuth interface {
-	Login(c echo.Context, user *types.User) (*types.Token, error)
-}
-
 type auth struct {
 	userRepo domain.IUsersRepo
 }
 
-func NewAuthService(userRepo domain.IUsersRepo) IAuth {
+func NewAuthService(userRepo domain.IUsersRepo) domain.IAuth {
 	return &auth{
 		userRepo: userRepo,
 	}
 }
 
-func mathcedCredentials(user *types.User, model_user *models.User) error {
+func mathcedCredentials(user *types.UserLoginReq, model_user *models.User) error {
 	fmt.Println(user, model_user)
 	if user.Password == model_user.Password && user.Type == model_user.Type {
 		return nil
@@ -35,7 +31,7 @@ func mathcedCredentials(user *types.User, model_user *models.User) error {
 	return errors.New("credintials not matched")
 }
 
-func (ur *auth) Login(c echo.Context, user *types.User) (*types.Token, error) {
+func (ur *auth) Login(c echo.Context, user *types.UserLoginReq) (*types.Token, error) {
 
 	var model_user = new(models.User)
 	var tokens = new(types.Token)

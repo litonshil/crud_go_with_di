@@ -7,17 +7,19 @@ import (
 	// m "github.com/litonshil/crud_go_echo/pkg/middleware"
 )
 
-// type users struct {
-// 	urepo domain.IUsersController
-// }
-
-func User(e *echo.Echo, u *controllers.UserRepo) {
+func InitRoute(e *echo.Echo, u *controllers.UserRepo, auth *controllers.Auth) {
 
 	sub := e.Group("/user")
-	sub.POST("/registration", u.Registration)
-	sub.GET("/users", u.GetAllUsers)
-	sub.GET("/:id", u.GetAUsers)
+
 	sub.PUT("/:id", u.UpdateUser)
 	sub.DELETE("/:id", u.DeleteUser)
+
+
+	sub.POST("/registration", u.Registration)
+	sub.GET("/users", u.GetUsers)
+	sub.GET("/:id", u.GetUser)
+
+	
+	e.POST("/users/login", auth.Login)
 
 }

@@ -31,20 +31,20 @@ func (db *dbs) GetUserByEmail(email string) (*models.User, error) {
 	return &user, err
 }
 
-func (db *dbs) GetAllUsers() ([]models.User, error) {
+func (db *dbs) GetUsers() ([]models.User, error) {
 	var all_users []models.User
 	err := db.DB.Find(&all_users).Error
 	fmt.Println(all_users)
 	return all_users, err
 }
 
-func (db *dbs) GetAUsers(id int) (models.User, error) {
+func (db *dbs) GetUserById(id int) (models.User, error) {
 	var user models.User
 	err := db.DB.Where("id = ?", id).Find(&user).Error
 	return user, err
 }
 
-func checkEmptyUserField(user *models.User, old_user *models.User) *models.User {
+func checkEmptyUserField(user *models.User, old_user models.User) *models.User {
 	if user.Name == "" {
 		user.Name = old_user.Name
 	}
@@ -63,29 +63,17 @@ func checkEmptyUserField(user *models.User, old_user *models.User) *models.User 
 	return user
 }
 
-func (db *dbs) UpdateUser(id int, user *models.User, old_user *models.User) (*models.User, error) {
-
-	old_err := db.DB.Model(old_user).Where("id = ?", id).Find(&old_user).Error
-
-	if old_err != nil {
-		return user, old_err
-	}
+func (db *dbs) UpdateUser(id int, user *models.User, existed_user models.User) (*models.User, error) {
 
 	user.Id = id
-
-	checkedUser := checkEmptyUserField(user, old_user)
+	checkedUser := checkEmptyUserField(user, existed_user)
 
 	err := db.DB.Model(&user).Where("id = ?", id).Update(&checkedUser).Error
-	fmt.Println("user", user)
 	return user, err
 }
 
 func (db *dbs) DeleteUser(id int) error {
 	var user models.User
-	existUserErr := db.DB.Where("id = ?", id).Find(&user).Error
-	if existUserErr != nil {
-		return existUserErr
-	}
 	err := db.DB.Where("id = ?", id).Delete(&user).Error
 	return err
 }

@@ -49,22 +49,22 @@ func (ur *UserRepo) Registration(c echo.Context) error {
 	return c.JSON(http.StatusCreated, "user created successfullys")
 }
 
-// GetAllUsers fetch all user
-func (ur *UserRepo) GetAllUsers(c echo.Context) error {
+// GetUsers fetch all user
+func (ur *UserRepo) GetUsers(c echo.Context) error {
 
-	res, err := ur.uSvc.GetAllUsers()
+	res, err := ur.uSvc.GetUsers()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusOK, res)
 }
 
-// GetAUsers fetch an specific user based on id
-func (ur *UserRepo) GetAUsers(c echo.Context) error {
+// GetUser fetch an specific user based on id
+func (ur *UserRepo) GetUser(c echo.Context) error {
 
 	id := c.Param("id")
 	user_id, _ := strconv.Atoi(id)
-	res, err := ur.uSvc.GetAUsers(user_id)
+	res, err := ur.uSvc.GetUser(user_id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -75,7 +75,6 @@ func (ur *UserRepo) GetAUsers(c echo.Context) error {
 func (ur *UserRepo) UpdateUser(c echo.Context) error {
 
 	var user = new(models.User)
-	var old_user = new(models.User)
 
 	if err := c.Bind(user); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
@@ -85,7 +84,7 @@ func (ur *UserRepo) UpdateUser(c echo.Context) error {
 
 	user_id, _ := strconv.Atoi(id)
 
-	res, err := ur.uSvc.UpdateUser(user_id, user, old_user)
+	res, err := ur.uSvc.UpdateUser(user_id, user)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
