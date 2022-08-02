@@ -9,8 +9,8 @@ import (
 	"github.com/labstack/echo/v4"
 	consts "github.com/litonshil/crud_go_echo/pkg/const"
 	"github.com/litonshil/crud_go_echo/pkg/domain"
+	"github.com/litonshil/crud_go_echo/pkg/types"
 
-	"github.com/litonshil/crud_go_echo/pkg/models"
 	"github.com/litonshil/crud_go_echo/pkg/utils"
 )
 
@@ -27,7 +27,7 @@ func NewUserController(uSvc domain.IUsersSvc) *UserRepo {
 
 // Registration create a user
 func (ur *UserRepo) Registration(c echo.Context) error {
-	var user = new(models.User)
+	var user = new(types.UserRegisterReq)
 
 	if err := c.Bind(user); err != nil {
 		return c.JSON(http.StatusBadRequest, consts.BadRequest)
@@ -74,7 +74,7 @@ func (ur *UserRepo) GetUser(c echo.Context) error {
 // // UpdateUser update an user
 func (ur *UserRepo) UpdateUser(c echo.Context) error {
 
-	var user = new(models.User)
+	var user = new(types.UserRegisterReq)
 
 	if err := c.Bind(user); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())

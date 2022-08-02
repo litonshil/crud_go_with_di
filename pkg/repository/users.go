@@ -20,6 +20,7 @@ func NewUsersRepository(dbc *gorm.DB) domain.IUsersRepo {
 }
 
 func (db *dbs) CreateUser(user *models.User) error {
+	fmt.Println(user)
 	err := db.DB.Create(&user).Error
 	return err
 }

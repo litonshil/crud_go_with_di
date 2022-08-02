@@ -5,11 +5,11 @@ import (
 	"net/smtp"
 
 	"github.com/litonshil/crud_go_echo/config"
-	"github.com/litonshil/crud_go_echo/pkg/models"
+	"github.com/litonshil/crud_go_echo/pkg/types"
 )
 
 // SendEmail sends an email to user
-func SendEmail(user *models.User) error {
+func SendEmail(user *types.UserRegisterReq) error {
 	to := []string{user.Email}
 
 	address := config.GetConfig().SmtpHost + ":" + config.GetConfig().SmtpPort
