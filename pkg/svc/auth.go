@@ -11,13 +11,14 @@ import (
 	"github.com/litonshil/crud_go_echo/pkg/models"
 	"github.com/litonshil/crud_go_echo/pkg/token"
 	"github.com/litonshil/crud_go_echo/pkg/types"
+	"github.com/litonshil/crud_go_echo/pkg/utils"
 )
 
 type auth struct {
 	userRepo domain.IUsersRepo
 }
 
-func NewAuthService(userRepo domain.IUsersRepo) domain.IAuth {
+func NewAuthService(userRepo domain.IUsersRepo) domain.IAuthSvc {
 	return &auth{
 		userRepo: userRepo,
 	}
@@ -29,6 +30,20 @@ func mathcedCredentials(user *types.UserLoginReq, model_user *models.User) error
 		return nil
 	}
 	return errors.New("credintials not matched")
+}
+
+func (ur *auth) CreateUser(user *types.UserRegisterReq) error {
+	var model_user = new(models.User)
+	respErr := utils.StructToStruct(user, &model_user)
+	if respErr != nil {
+		return respErr
+	}
+
+	saveErr := ur.userRepo.CreateUser(model_user)
+	if saveErr != nil {
+		return saveErr
+	}
+	return saveErr
 }
 
 func (ur *auth) Login(c echo.Context, user *types.UserLoginReq) (*types.Token, error) {

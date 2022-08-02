@@ -19,19 +19,19 @@ func NewUsersService(urepo domain.IUsersRepo) domain.IUsersSvc {
 	}
 }
 
-func (u *users) CreateUser(user *types.UserRegisterReq) error {
-	var model_user = new(models.User)
-	respErr := utils.StructToStruct(user, &model_user)
-	if respErr != nil {
-		return respErr
-	}
+// func (u *users) CreateUser(user *types.UserRegisterReq) error {
+// 	var model_user = new(models.User)
+// 	respErr := utils.StructToStruct(user, &model_user)
+// 	if respErr != nil {
+// 		return respErr
+// 	}
 
-	saveErr := u.urepo.CreateUser(model_user)
-	if saveErr != nil {
-		return saveErr
-	}
-	return saveErr
-}
+// 	saveErr := u.urepo.CreateUser(model_user)
+// 	if saveErr != nil {
+// 		return saveErr
+// 	}
+// 	return saveErr
+// }
 
 func (u *users) GetUserByEmail(email string) (*models.User, error) {
 	res, err := u.urepo.GetUserByEmail(email)

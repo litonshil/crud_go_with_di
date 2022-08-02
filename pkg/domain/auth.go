@@ -5,6 +5,7 @@ import (
 	"github.com/litonshil/crud_go_echo/pkg/types"
 )
 
-type IAuth interface {
+type IAuthSvc interface {
 	Login(c echo.Context, user *types.UserLoginReq) (*types.Token, error)
+	CreateUser(user *types.UserRegisterReq) error
 }
