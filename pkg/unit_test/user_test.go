@@ -20,11 +20,11 @@ var (
 )
 
 var userJson = models.User{
-	Id: 6,
-	Email: "lalala@gmail.com",
-	Name: "Kaium",
-	Address: "Chittagong",
-	Type: "normal-user",
+	Id:       6,
+	Email:    "lalala@gmail.com",
+	Name:     "Kaium",
+	Address:  "Chittagong",
+	Type:     "normal-user",
 	Password: "1234",
 }
 
@@ -40,7 +40,7 @@ func GetDB() *gorm.DB {
 	return db
 }
 
-func TestFindByID(t *testing.T) {
+func TestGetUserByID(t *testing.T) {
 	db := GetDB()
 	repo := repository.NewUsersRepository(db)
 
