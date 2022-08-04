@@ -1,4 +1,4 @@
-package config
+package testconfig
 
 import (
 	"fmt"
@@ -16,11 +16,12 @@ type Config struct {
 	SmtpPort     string `mapstructure:"SMTP_PORT"`
 	SmtpPassword string `mapstructure:"SMTP_PASSWORD"`
 	SecretKey    string `mapstructure:"SECRETKEY"`
+	POSTGRES_URL string `mapstructure:"POSTGRES_URL"`
 }
 
 func init_config() (config Config, err error) {
 	viper.AddConfigPath(".")
-	viper.SetConfigName("app")
+	viper.SetConfigName("testApp")
 	viper.SetConfigType("env")
 	viper.AutomaticEnv()
 
