@@ -27,6 +27,15 @@ var userJson = models.User{
 	Password: "aaaaa",
 }
 
+var userReg = &models.User{
+	Id: 5,
+	Email:    "bbbbb@gmail.com",
+	Name:     "bbbbb",
+	Address:  "bbbbb",
+	Type:     "admin",
+	Password: "bbbbb",
+}
+
 func GetDB() *gorm.DB {
 
 	return db
@@ -40,4 +49,12 @@ func TestGetUserByID(t *testing.T) {
 	assert.NotNil(t, user)
 	assert.NoError(t, err)
 	assert.Equal(t, userJson, user)
+}
+
+func TestCreateUser(t *testing.T) {
+	repo := repository.NewUsersRepository(db)
+	err := repo.CreateUser(userReg)
+	assert.NoError(t, err)
+	db.Delete(&models.User{})
+
 }
