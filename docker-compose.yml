@@ -1,0 +1,34 @@
+services:
+  api_server:
+    build: .
+    #image: crud_go_with_di
+    container_name: crud_go_with_di
+    # hostname: crud_go_with_di
+    restart: always
+    ports:
+      - 8080:8080
+    env_file:
+      - app.env
+
+  mysql:
+    image: mysql
+    container_name: mysql
+    hostname: mysql
+    restart: always
+    #cap_add:
+      #- SYS_NICE
+    env_file:
+      - app.env
+    environment:
+        MYSQL_ROOT_PASSWORD: 
+        MYSQL_DATABASE: user_crud
+        MYSQL_USER: root
+        MYSQL_PASSWORD: 
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
+    #name: users-data
