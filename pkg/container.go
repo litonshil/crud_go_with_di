@@ -2,8 +2,8 @@ package continer
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/litonshil/crud_go_echo/pkg/connection"
 	"github.com/litonshil/crud_go_echo/pkg/controllers"
-	"github.com/litonshil/crud_go_echo/pkg/database"
 	"github.com/litonshil/crud_go_echo/pkg/routes"
 
 	// "github.com/litonshil/crud_go_echo/pkg/repository"
@@ -12,7 +12,7 @@ import (
 )
 
 func Init(e *echo.Echo) {
-	db := database.GetDB()
+	db := connection.GetDB()
 
 	userRepo := repoImpl.NewUsersRepository(db)
 	userSvc := svcImpl.NewUsersService(userRepo)
