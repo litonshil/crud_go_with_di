@@ -16,7 +16,6 @@ type Config struct {
 	SmtpPort     string `mapstructure:"SMTP_PORT"`
 	SmtpPassword string `mapstructure:"SMTP_PASSWORD"`
 	SecretKey    string `mapstructure:"SECRETKEY"`
-	MysqlUser    string `mapstructure:"MYSQL_USER"`
 }
 
 func init_config() (config Config, err error) {

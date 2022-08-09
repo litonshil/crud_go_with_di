@@ -9,6 +9,10 @@ services:
       - 8080:8080
     env_file:
       - app.env
+    depends_on:
+      - mysql
+    links:
+      - mysql
 
   mysql:
     image: mysql
