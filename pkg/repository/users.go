@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/jinzhu/gorm"
@@ -21,6 +22,10 @@ func NewUsersRepository(dbc *gorm.DB) domain.IUsersRepo {
 
 func (db *dbs) CreateUser(user *models.User) error {
 	fmt.Println(user)
+	_, errExist := db.GetUserByEmail(user.Email)
+	if errExist == nil {
+		return errors.New("email exist")
+	}
 	err := db.DB.Create(&user).Error
 	return err
 }

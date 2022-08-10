@@ -35,6 +35,9 @@ func (ur *Auth) Registration(c echo.Context) error {
 	}
 
 	if err := ur.authSvc.CreateUser(user); err != nil {
+		if err.Error() == "email exist" {
+			return c.JSON(http.StatusConflict, err.Error())
+		}
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
