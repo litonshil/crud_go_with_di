@@ -16,6 +16,8 @@ type Config struct {
 	SmtpPort     string `mapstructure:"SMTP_PORT"`
 	SmtpPassword string `mapstructure:"SMTP_PASSWORD"`
 	SecretKey    string `mapstructure:"SECRETKEY"`
+	Mode         string `mapstructure:"MODE"`
+	POSTGRES_URL string `mapstructure:"POSTGRES_URL"`
 }
 
 func init_config() (config Config, err error) {

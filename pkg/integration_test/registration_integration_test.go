@@ -11,16 +11,15 @@ import (
 )
 
 func TestRegistration(t *testing.T) {
-
 	url := "http://localhost:8080/user/registration"
 	method := "POST"
 
 	payload := strings.NewReader(`{
-    	"name": "bbbbcccc",
-    	"address": "bbbbcccc",
-    	"email": "bbbbcccc@gmail.com",
+    	"name": "bbbbbccccc",
+    	"address": "bbbbbccccc",
+    	"email": "bbbbbccccc@gmail.com",
     	"type": "normal-user",
-    	"password": "bbbbcccc"
+    	"password": "bbbbbccccc"
 	}`)
 
 	client := &http.Client{}
