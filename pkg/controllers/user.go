@@ -6,9 +6,11 @@ import (
 
 	"strconv"
 
+	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo/v4"
 	"github.com/litonshil/crud_go_echo/pkg/domain"
 	"github.com/litonshil/crud_go_echo/pkg/types"
+	"github.com/litonshil/crud_go_echo/pkg/utils"
 )
 
 type UserRepo struct {
@@ -27,7 +29,10 @@ func (ur *UserRepo) GetUsers(c echo.Context) error {
 
 	res, err := ur.uSvc.GetUsers()
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		if err == gorm.ErrRecordNotFound {
+			return c.JSON(http.StatusNotFound, utils.EntityNotFoundMsg("User"))
+		}
+		return c.JSON(http.StatusInternalServerError, utils.SomethingWentWrongMsg())
 	}
 	return c.JSON(http.StatusOK, res)
 }
@@ -36,10 +41,17 @@ func (ur *UserRepo) GetUsers(c echo.Context) error {
 func (ur *UserRepo) GetUser(c echo.Context) error {
 
 	id := c.Param("id")
-	user_id, _ := strconv.Atoi(id)
+	user_id, conErr := strconv.Atoi(id)
+	if conErr != nil {
+		return c.JSON(http.StatusBadRequest, utils.SomethingWentWrongMsg())
+	}
+
 	res, err := ur.uSvc.GetUser(user_id)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		if err == gorm.ErrRecordNotFound {
+			return c.JSON(http.StatusNotFound, utils.EntityNotFoundMsg("User"))
+		}
+		return c.JSON(http.StatusInternalServerError, utils.SomethingWentWrongMsg())
 	}
 	return c.JSON(http.StatusOK, res)
 }
@@ -50,16 +62,23 @@ func (ur *UserRepo) UpdateUser(c echo.Context) error {
 	var user = new(types.UserRegisterReq)
 
 	if err := c.Bind(user); err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusBadRequest, utils.RequestBodyParseErrorResponseMsg())
 	}
 
 	id := c.Param("id")
 
-	user_id, _ := strconv.Atoi(id)
+	user_id, err := strconv.Atoi(id)
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, utils.SomethingWentWrongMsg())
+	}
 
 	res, err := ur.uSvc.UpdateUser(user_id, user)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		if err == gorm.ErrRecordNotFound {
+			return c.JSON(http.StatusNotFound, utils.EntityNotFoundMsg("User"))
+		}
+		return c.JSON(http.StatusInternalServerError, utils.SomethingWentWrongMsg())
 	}
 	return c.JSON(http.StatusOK, res)
 }
@@ -71,7 +90,10 @@ func (ur *UserRepo) DeleteUser(c echo.Context) error {
 	user_id, _ := strconv.Atoi(id)
 	err_delete := ur.uSvc.DeleteUser(user_id)
 	if err_delete != nil {
-		return c.JSON(http.StatusInternalServerError, err_delete.Error())
+		if err_delete == gorm.ErrRecordNotFound {
+			return c.JSON(http.StatusNotFound, utils.EntityNotFoundMsg("User"))
+		}
+		return c.JSON(http.StatusInternalServerError, utils.SomethingWentWrongMsg())
 	}
 	fmt.Println(err_delete)
 	return c.JSON(http.StatusOK, "user deleted successfully")
