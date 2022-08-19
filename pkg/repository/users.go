@@ -4,19 +4,22 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/go-redis/redis/v8"
 	"github.com/jinzhu/gorm"
 	"github.com/litonshil/crud_go_echo/pkg/domain"
 	"github.com/litonshil/crud_go_echo/pkg/models"
 )
 
 type dbs struct {
-	DB *gorm.DB
+	DB    *gorm.DB
+	Redis *redis.Client
 }
 
 // NewUsersRepository will create an object that represent the User.Repository implementations
-func NewUsersRepository(dbc *gorm.DB) domain.IUsersRepo {
+func NewUsersRepository(dbc *gorm.DB, redis *redis.Client) domain.IUsersRepo {
 	return &dbs{
-		DB: dbc,
+		DB:    dbc,
+		Redis: redis,
 	}
 }
 

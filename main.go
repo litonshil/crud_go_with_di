@@ -8,6 +8,7 @@ import (
 
 func main() {
 	connection.Connect()
+	connection.ConnectRedis()
 	e := echo.New()
 	container.Init(e)
 	e.Start(":8080")

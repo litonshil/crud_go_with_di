@@ -13,8 +13,9 @@ import (
 
 func Init(e *echo.Echo) {
 	db := connection.GetDB()
+	client := connection.Redis()
 
-	userRepo := repoImpl.NewUsersRepository(db)
+	userRepo := repoImpl.NewUsersRepository(db, client)
 	userSvc := svcImpl.NewUsersService(userRepo)
 	authSvc := svcImpl.NewAuthService(userRepo)
 
