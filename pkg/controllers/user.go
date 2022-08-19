@@ -8,6 +8,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo/v4"
+	logger "github.com/litonshil/crud_go_echo/log"
 	"github.com/litonshil/crud_go_echo/pkg/domain"
 	"github.com/litonshil/crud_go_echo/pkg/types"
 	"github.com/litonshil/crud_go_echo/pkg/utils"
@@ -48,6 +49,8 @@ func (ur *UserRepo) GetUser(c echo.Context) error {
 
 	res, err := ur.uSvc.GetUser(user_id)
 	if err != nil {
+
+		logger.Error(err)
 		if err == gorm.ErrRecordNotFound {
 			return c.JSON(http.StatusNotFound, utils.EntityNotFoundMsg("User"))
 		}
